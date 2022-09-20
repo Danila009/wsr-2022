@@ -10,8 +10,8 @@ import retrofit2.http.POST
 
 interface Api {
 
-    @GET("/Menu")
-    suspend fun getMenu():Menu
+    @GET("/Menu/Items")
+    suspend fun getMenuItems():List<MenuItem>
 
     @POST("/Registration")
     suspend fun registration(
@@ -31,20 +31,25 @@ fun createRetrofit(): Retrofit = Retrofit.Builder()
 
 fun createApi(retrofit: Retrofit = createRetrofit()):Api = retrofit.create<Api>()
 
-data class Menu(
-    val id:Int,
-    val foods:List<MenuItem>,
-    val drinks:List<MenuItem>,
-    val snacks:List<MenuItem>,
-    val sauces:List<MenuItem>
-)
-
 data class MenuItem(
     val id:Int,
     val name:String,
     val price:Int,
     val description:String,
-    val photo:String
+    val images: List<Image>,
+    val type: MenuType
+)
+
+enum class MenuType(val title:String) {
+    FOOD("Foods"),
+    DRINK("Drinks"),
+    SNACK("Snacks"),
+    SAUCE("Sauce")
+}
+
+data class Image(
+    val id:Int,
+    val url:String
 )
 
 data class RegisrtData(

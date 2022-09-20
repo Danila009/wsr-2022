@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -20,16 +19,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fastest_delivey_app.R
-import com.example.fastest_delivey_app.api.Menu
+import com.example.fastest_delivey_app.api.MenuItem
 import com.example.fastest_delivey_app.api.createApi
 import com.example.fastest_delivey_app.ui.theme.MainColor
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.launch
 
 @Composable
 fun Int.toBitmap(
@@ -49,23 +45,27 @@ fun StartScreen(
     val scope = rememberCoroutineScope()
     val api = createApi()
 
-    var menu = remember { mutableStateOf<Menu?>(null) }
+    var menu = remember { mutableStateOf<List<MenuItem>?>(null) }
 
 //    val sustem = rememberSystemUiController()
 
-    LaunchedEffect(key1 = Unit, block = {
+    repeat(5){
+        LaunchedEffect(key1 = Unit, block = {
 //
 //        sustem.setSystemBarsColor(
 //            darkIcons = true,
 //            color = Color.White
 //        )
 
-        menu.value = api.getMenu()
+            try {
+                menu.value = api.getMenuItems()
 
-        menu.value?.let {
-            navController.navigate("pager_screen")
-        }
-    })
+                menu.value?.let {
+                    navController.navigate("pager_screen")
+                }
+            }catch (e:Exception){}
+        })
+    }
 
     Image(
         bitmap = R.drawable.start_beck.toBitmap().asImageBitmap(),
