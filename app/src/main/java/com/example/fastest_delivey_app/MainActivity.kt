@@ -10,9 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.fastest_delivey_app.screen.*
 import com.example.fastest_delivey_app.ui.theme.FastestdeliveyappTheme
 
@@ -42,6 +44,18 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("auth_screen"){
                             AuthScreen(navController = navController)
+                        }
+                        composable("menu_item_screen/{id}", arguments = listOf(
+                            navArgument(
+                                name = "id"
+                            ){
+                                type = NavType.StringType
+                            }
+                        )){
+                            MenuItemScreen(
+                                navController = navController,
+                                menuItemId = it.arguments!!.getInt("id")
+                            )
                         }
                     }
                 )

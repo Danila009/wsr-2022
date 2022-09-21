@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.fastest_delivey_app.R
@@ -36,6 +37,9 @@ import com.example.fastest_delivey_app.api.createApi
 import com.example.fastest_delivey_app.ui.theme.Grey
 import com.example.fastest_delivey_app.ui.theme.MainColor
 import com.example.fastest_delivey_app.ui.theme.MainGrey
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filter
@@ -93,7 +97,7 @@ fun MainScreen(
             Surface(
                 color = MainGrey
             ) {
-                Column() {
+                Column {
                     if (mainBottomNavigation.value == MainBottomNavigation.HOME){
                         if (!searchState.value){
 
@@ -132,6 +136,21 @@ fun MainScreen(
 
                                 Spacer(modifier = Modifier.padding(20.dp))
                             }
+
+                            AndroidView(
+                                modifier = Modifier
+                                    .padding(5.dp)
+                                    .fillMaxWidth()
+                                    .height(100.dp),
+                                factory = {
+                                    AdView(it).apply {
+//                                        adSize = AdSize.BANNER
+                                        adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                                        loadAd(AdRequest.Builder().build())
+                                    }
+                                }
+                            )
+
                         }else{
                             TextField(
                                 value = searchText.value,
@@ -230,7 +249,10 @@ fun MainScreen(
             color = MainGrey
         ) {
             when(mainBottomNavigation.value){
-                MainBottomNavigation.HOME -> HomeScreen(menuItems = menuItems.value)
+                MainBottomNavigation.HOME -> HomeScreen(
+                    menuItems = menuItems.value,
+                    navController = navController
+                )
                 MainBottomNavigation.ORDER -> {}
                 MainBottomNavigation.PROFILE -> {}
                 MainBottomNavigation.HISTORY -> {}

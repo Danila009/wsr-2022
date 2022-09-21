@@ -7,11 +7,18 @@ import retrofit2.create
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface Api {
 
     @GET("/Menu/Items")
     suspend fun getMenuItems():List<MenuItem>
+
+
+    @GET("/Menu/Items/{id}")
+    suspend fun getMenuItem(
+        @Path("id") id:Int
+    ):MenuItem?
 
     @POST("/Registration")
     suspend fun registration(
