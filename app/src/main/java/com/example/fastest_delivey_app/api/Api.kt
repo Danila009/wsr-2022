@@ -4,21 +4,17 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface Api {
 
     @GET("/Menu/Items")
     suspend fun getMenuItems():List<MenuItem>
 
-
     @GET("/Menu/Items/{id}")
     suspend fun getMenuItem(
         @Path("id") id:Int
-    ):MenuItem?
+    ):MenuItem
 
     @POST("/Registration")
     suspend fun registration(
@@ -29,6 +25,17 @@ interface Api {
     suspend fun auth(
         @Body body:AuthData
     ):AuhtResult
+
+    @POST("/History/Order")
+    suspend fun postOrder(
+        @Body body: HistoryOrder,
+        @Header("Authorization") token:String
+    )
+
+    @GET("/History/Order")
+    suspend fun getOrders(
+        @Header("Authorization") token:String
+    ):List<HistoryOrder>
 }
 
 fun createRetrofit(): Retrofit = Retrofit.Builder()
@@ -38,13 +45,28 @@ fun createRetrofit(): Retrofit = Retrofit.Builder()
 
 fun createApi(retrofit: Retrofit = createRetrofit()):Api = retrofit.create<Api>()
 
+data class HistoryOrder(
+    val id:Int = 0,
+    val courierId:Int = 0,
+    val address:String = "Test adress",
+    val date:String,
+    val price:Int? = null,
+    val items:List<HistoryOrderItem>
+)
+
+data class HistoryOrderItem(
+    val id:Int = 0,
+    val number:Int,
+    val menuItem:MenuItem
+)
+
 data class MenuItem(
-    val id:Int,
-    val name:String,
-    val price:Int,
-    val description:String,
-    val images: List<Image>,
-    val type: MenuType
+    val id:Int = 0,
+    val name:String = "",
+    var price:Int = 0,
+    val description:String = "",
+    val images: List<Image> = emptyList(),
+    val type: MenuType = MenuType.FOOD
 )
 
 enum class MenuType(val title:String) {

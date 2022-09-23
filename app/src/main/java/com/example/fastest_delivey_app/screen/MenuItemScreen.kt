@@ -19,6 +19,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.fastest_delivey_app.api.MenuItem
 import com.example.fastest_delivey_app.api.createApi
+import com.example.fastest_delivey_app.database.Order
+import com.example.fastest_delivey_app.database.createOrderDao
 import com.example.fastest_delivey_app.ui.theme.Grey
 import com.example.fastest_delivey_app.ui.theme.MainColor
 import com.example.fastest_delivey_app.ui.theme.MainGrey
@@ -37,7 +39,11 @@ fun MenuItemScreen(
 ) {
     val api = createApi()
 
-    val menuItem = remember { mutableStateOf<MenuItem?>(null) }
+    val orderDao = createOrderDao()
+
+    val menuItem = remember { mutableStateOf(MenuItem()) }
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = Unit, block = {
         menuItem.value = api.getMenuItem(menuItemId)
@@ -47,8 +53,8 @@ fun MenuItemScreen(
         modifier = Modifier.fillMaxSize(),
         color = MainGrey
     ) {
-        menuItem.value?.let { item ->
-
+        if(menuItem.value.id != 0 ){
+            val item = menuItem.value
 
             val pagerState = rememberPagerState(pageCount = item.images.lastIndex)
 
@@ -128,7 +134,18 @@ fun MenuItemScreen(
                                 backgroundColor = MainColor
                             ),
                             onClick = {
-
+                                scope.launch {
+                                    orderDao.insertOrder(
+                                        Order(
+                                            id = 0,
+                                            name = item.name,
+                                            price = item.price,
+                                            icon = item.images.last().url,
+                                            count = 1,
+                                            defultPrice = item.price
+                                        )
+                                    )
+                                }
                             },
                         ) {
                             Text(text = "Add to cart",color = Color.White)

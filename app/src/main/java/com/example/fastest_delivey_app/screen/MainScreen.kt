@@ -144,7 +144,7 @@ fun MainScreen(
                                     .height(100.dp),
                                 factory = {
                                     AdView(it).apply {
-//                                        adSize = AdSize.BANNER
+                                        adSize = AdSize.BANNER
                                         adUnitId = "ca-app-pub-3940256099942544/6300978111"
                                         loadAd(AdRequest.Builder().build())
                                     }
@@ -251,11 +251,12 @@ fun MainScreen(
             when(mainBottomNavigation.value){
                 MainBottomNavigation.HOME -> HomeScreen(
                     menuItems = menuItems.value,
-                    navController = navController
+                    navController = navController,
+                    mainBottomNavigation = mainBottomNavigation
                 )
-                MainBottomNavigation.ORDER -> {}
+                MainBottomNavigation.ORDER -> OrderScreen(navController = navController)
                 MainBottomNavigation.PROFILE -> {}
-                MainBottomNavigation.HISTORY -> {}
+                MainBottomNavigation.HISTORY -> HistoryScreen(navController = navController)
             }
         }
     }

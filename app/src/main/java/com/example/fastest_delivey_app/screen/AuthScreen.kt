@@ -26,6 +26,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
 var token:String? = null
+var userEmail:String? = null
+var userPassword:String? = null
 
 @Composable
 fun AuthScreen(
@@ -141,6 +143,9 @@ fun AuthScreen(
                                     email = email.value,
                                     password = password.value
                                 )).access_token
+
+                                userEmail = email.value
+                                userPassword = password.value
 
                                 token?.let {
                                     navController.navigate("main_screen")

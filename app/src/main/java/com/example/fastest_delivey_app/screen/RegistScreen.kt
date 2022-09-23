@@ -52,6 +52,9 @@ fun RegistScreen(
                 password = password.value
             )).access_token
 
+            userEmail = email.value
+            userPassword = password.value
+
             navController.navigate("main_screen")
         }
     }
